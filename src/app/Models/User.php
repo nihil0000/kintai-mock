@@ -22,32 +22,16 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'name',
         'email',
         'password',
-        'profile_image',
     ];
 
-    public function products()
+    public function attendances()
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Attendance::class);
     }
 
-    public function address()
+    public function attendance_correction_requests()
     {
-        return $this->hasOne(Address::class);
-    }
-
-    public function favorites()
-    {
-        return $this->hasMany(Favorite::class);
-    }
-
-    public function comments()
-    {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(AttendanceCorrectionRequest::class);
     }
 
     /**
