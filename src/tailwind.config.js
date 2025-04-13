@@ -7,7 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        slab: ['"Noto Sans JP"', 'serif'],
+        'noto-sans': ['"Noto Sans JP"', 'serif'],
       },
     },
   },
