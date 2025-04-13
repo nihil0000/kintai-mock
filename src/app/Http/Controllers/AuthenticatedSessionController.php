@@ -47,6 +47,6 @@ class AuthenticatedSessionController extends Controller
         auth()->logout(); // Logout the user
         $request->session()->invalidate(); // Invalidate the session
         $request->session()->regenerateToken(); // Regenerate CSRF token
-        return redirect('login'); // Redirect to login page
+        return redirect()->route('login.create'); // Redirect to login page
     }
 }
