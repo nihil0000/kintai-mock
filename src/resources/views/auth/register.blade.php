@@ -51,7 +51,7 @@
 
                 <!-- confirm password -->
                 <section>
-                    <label for="confirmed_password" class="block mb-1">確認パスワード</label>
+                    <label for="confirmed_password" class="block mb-1">確認用パスワード</label>
 
                     <input type="password" id="confirmed_password" name="password_confirmation"
                         class="w-full h-10 border border-gray-400 px-3 rounded">
