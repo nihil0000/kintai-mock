@@ -13,4 +13,9 @@ class Admin extends Model
     {
         return $this->hasMany(ApprovalLog::class);
     }
+
+    public function approval_log()
+    {
+        return $this->belongsTo(ApprovalLog::class);
+    }
 }

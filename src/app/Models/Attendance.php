@@ -22,4 +22,14 @@ class Attendance extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function breaks()
+    {
+        return $this->belongsTo(BreakTime::class);
+    }
+
+    public function attendance_correction_request()
+    {
+        return $this->belongsTo(AttendanceCorrectionRequest::class);
+    }
 }

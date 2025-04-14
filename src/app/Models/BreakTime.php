@@ -11,5 +11,13 @@ class BreakTime extends Model
 
     protected $table = 'breaks';
 
-    protected $fillable = ['break_end'];
+    protected $fillable = [
+        'break_start',
+        'break_end'
+    ];
+
+    public function attendance()
+    {
+        return $this->hasMany(Attendance::class);
+    }
 }

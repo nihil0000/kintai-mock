@@ -15,4 +15,9 @@ class ApprovalLog extends Model
     {
         return $this->belongsTo(AttendanceCorrectionRequest::class);
     }
+
+    public function admin()
+    {
+        return $this->belongsTo(Admin::class);
+    }
 }
