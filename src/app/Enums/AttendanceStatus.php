@@ -4,18 +4,18 @@ namespace App\Enums;
 
 enum AttendanceStatus: string
 {
-    case OutsideWorking = 'outside_working';
+    case BeforeWork = 'before_work';
     case Working        = 'working';
     case OnBreak        = 'on_break';
-    case LeftWork       = 'left_work';
+    case AfterWork       = 'after_work';
 
     public function label(): string
     {
         return match ($this) {
-            self::OutsideWorking => '勤務外',
+            self::BeforeWork => '勤務外',
             self::Working        => '出勤中',
             self::OnBreak        => '休憩中',
-            self::LeftWork       => '退勤済',
+            self::AfterWork       => '退勤済',
         };
     }
 }

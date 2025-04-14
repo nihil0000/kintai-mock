@@ -27,7 +27,7 @@ class AttendanceFactory extends Factory
             'date'      => $date,
             'clock_in'  => $clockIn,
             'clock_out' => $clockOut,
-            'status'    => AttendanceStatus::LeftWork,
+            'status'    => AttendanceStatus::AfterWork,
             'note'      => $this->faker->optional()->sentence(),
         ];
     }
