@@ -32,7 +32,7 @@ class AuthenticatedSessionController extends Controller
             }
 
             $request->session()->regenerate(); // Prevent session fixation attacks
-            return redirect()->intended(route('attendance.index')); // Redirect admin page
+            return redirect()->intended(route('attendance.create')); // Redirect attendance page
         }
 
         // Authentication failed
