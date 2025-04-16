@@ -2,9 +2,9 @@
 
 @section('content')
 <main class="flex-grow px-4">
-    <div class="w-full max-w-4xl mx-auto my-20 space-y-6">
-        <section>
-            <h2 class="text-xl font-bold mb-6 pl-4 border-l-4 border-black">勤怠一覧</h2>
+    <div class="w-full max-w-4xl mx-auto my-20">
+        <section class="space-y-6">
+            <h2 class="text-2xl font-bold pl-4 border-l-4 border-black">勤怠一覧</h2>
 
             <!-- 月選択 -->
             <div class="flex items-center justify-between mb-4 bg-white py-2 px-4 rounded">
