@@ -38,7 +38,7 @@
                             勤怠一覧
                         </a>
 
-                        <a href="{{ route('attendance.create') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
+                        <a href="{{ route('stamp_correction_request.index') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
                             申請
                         </a>
 
