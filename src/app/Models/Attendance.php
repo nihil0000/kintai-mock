@@ -31,7 +31,7 @@ class Attendance extends Model
 
     public function attendance_correction_request()
     {
-        return $this->belongsTo(AttendanceCorrectionRequest::class);
+        return $this->hasOne(AttendanceCorrectionRequest::class);
     }
 
     /**

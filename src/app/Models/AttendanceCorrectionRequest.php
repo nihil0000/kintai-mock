@@ -11,7 +11,7 @@ class AttendanceCorrectionRequest extends Model
     use HasFactory;
 
     protected $fillable =[
-        'requested_clock_in', 'requested_clock_out', 'requested_breaks'
+        'attendance_id', 'user_id', 'requested_clock_in', 'requested_clock_out', 'requested_breaks', 'note', 'status',
     ];
 
     protected $casts = [
@@ -26,5 +26,10 @@ class AttendanceCorrectionRequest extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function approval_log()
+    {
+        return $this->belongsTo(ApprovalLog::class);
     }
 }
