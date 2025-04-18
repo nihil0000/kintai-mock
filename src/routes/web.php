@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthenticatedSessionController;
+use App\Http\Controllers\Admin\AuthenticatedSessionController as AdminAuthenticatedSessionController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\StampCorrectionRequestController;
 
 /*
@@ -64,4 +66,19 @@ Route::middleware('auth')->controller(AttendanceController::class)->group(functi
 // Correction request
 Route::middleware('auth')->controller(StampCorrectionRequestController::class)->group(function () {
     Route::get('/stamp_correction_request/list', 'index')->name('stamp_correction_request.index'); // Display correction request list
+});
+
+// Admin authentication
+Route::controller(AdminAuthenticatedSessionController::class)
+    ->group(function () {
+        Route::get('admin/login', 'create')->name('admin.login.create');
+        Route::post('admin/login', 'store')->name('admin.login.store');
+        Route::post('admin/logout', 'destroy')->name('admin.logout.destroy');
+});
+
+// Admin attendance list
+Route::middleware('auth.admins')
+    ->controller(AdminAttendanceController::class)
+    ->group(function () {
+        Route::get('admin/attendance/list', 'index')->name('admin.attendance.index');
 });
