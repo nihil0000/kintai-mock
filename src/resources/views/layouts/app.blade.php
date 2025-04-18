@@ -28,6 +28,7 @@
             @endif
 
             <nav class="flex items-center space-x-5">
+                <!-- navigation for general users -->
                 @auth
                     @unless (Request::routeIs('login.create') || Request::routeIs('register.create') || Request::routeIs('verification.notice'))
                         <a href="{{ route('attendance.create') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
@@ -40,6 +41,34 @@
 
                         <a href="{{ route('stamp_correction_request.index') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
                             申請
+                        </a>
+
+                        <!-- show only for authenticated users -->
+                        <a href="{{ route('logout.destroy') }}"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                            class="hover:underline text-sm md:text-base whitespace-nowrap">
+                            ログアウト
+                        </a>
+
+                        <form action="{{ route('logout.destroy') }}" id="logout-form" method="post" class="hidden">
+                            @csrf
+                        </form>
+                    @endunless
+                @endauth
+
+                <!-- navigation for admin users -->
+                @auth('admins')
+                    @unless (Request::routeIs('login.create') || Request::routeIs('register.create') || Request::routeIs('verification.notice'))
+                        <a href="{{ route('attendance.create') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
+                            勤怠一覧
+                        </a>
+
+                        <a href="{{ route('attendance.index') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
+                            スタッフ一覧
+                        </a>
+
+                        <a href="{{ route('stamp_correction_request.index') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
+                            申請一覧
                         </a>
 
                         <!-- show only for authenticated users -->
