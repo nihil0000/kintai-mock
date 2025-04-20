@@ -102,6 +102,7 @@ Route::middleware('auth.admins')
     ->group(function () {
         Route::get('admin/attendance/list', 'index')->name('admin.attendance.index');
         Route::get('admin/attendance/staff/{user}', 'show')->name('admin.attendance.show'); // Show the user attendance monthly
+        Route::get('admin/attendance/{user}/csv', 'exportCsv')->name('admin.attendance.exportCsv'); // Export csv
 });
 
 // Display staff list

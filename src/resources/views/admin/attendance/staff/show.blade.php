@@ -4,7 +4,7 @@
 <main class="flex-grow px-4">
     <div class="w-full max-w-4xl mx-auto my-20">
         <section class="space-y-6">
-            <h2 class="text-2xl font-bold pl-4 border-l-4 border-black">勤怠一覧</h2>
+            <h2 class="text-2xl font-bold pl-4 border-l-4 border-black">{{ $user->name }}さんの勤怠</h2>
 
             <!-- 月選択 -->
             <div class="flex items-center justify-between mb-4 bg-white py-2 px-4 rounded">
@@ -67,6 +67,13 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                <div class="text-center">
+                    <a href="{{ route('admin.attendance.exportCsv', ['user' => $user->id, 'month' => $currentMonth->format('Y-m')]) }}"
+                        class="inline-block bg-black text-white text-lg font-bold w-28 py-2 mt-12 mb-4 rounded hover:bg-gray-700">
+                        CSV出力
+                    </a>
+                </div>
             </div>
         </section>
     </div>

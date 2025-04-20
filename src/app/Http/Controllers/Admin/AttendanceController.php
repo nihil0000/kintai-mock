@@ -8,6 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class AttendanceController extends Controller
 {
@@ -58,5 +59,53 @@ class AttendanceController extends Controller
             'previousMonth' => $month->copy()->subMonth()->format('Y-m'),
             'nextMonth' => $month->copy()->addMonth()->format('Y-m'),
         ]);
+    }
+
+    // Export csv
+    public function exportCsv(Request $request, User $user): StreamedResponse
+    {
+        $month = $request->input('month')
+            ? Carbon::parse($request->input('month') . '-01')
+            : now();
+
+        // 勤怠データを取得し、日付をキーにマッピング
+        $attendances = Attendance::where('user_id', $user->id)
+            ->whereBetween('date', [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()])
+            ->orderBy('date')
+            ->get()
+            ->keyBy(fn($a) => $a->date->toDateString());
+
+        $period = CarbonPeriod::create($month->copy()->startOfMonth(), $month->copy()->endOfMonth());
+
+        $filename = $user->name . '_勤怠_' . $month->format('Y_m') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => "attachment; filename=\"$filename\"",
+        ];
+
+        return response()->stream(function () use ($attendances, $period) {
+            $handle = fopen('php://output', 'w');
+
+            // UTF-8 BOM（Excel対応）
+            fprintf($handle, chr(0xEF).chr(0xBB).chr(0xBF));
+
+            // ヘッダ行
+            fputcsv($handle, ['日付', '出勤', '退勤', '休憩', '合計']);
+
+            foreach ($period as $date) {
+                $attendance = $attendances->get($date->toDateString());
+
+                fputcsv($handle, [
+                    $date->isoFormat('Y/MM/DD(dd)'),
+                    $attendance?->clock_in ? Carbon::parse($attendance->clock_in)->format('H:i') : '-',
+                    $attendance?->clock_out ? Carbon::parse($attendance->clock_out)->format('H:i') : '-',
+                    $attendance?->break_time ?? '-',
+                    $attendance?->total_time ?? '-',
+                ]);
+            }
+
+            fclose($handle);
+        }, 200, $headers);
     }
 }
