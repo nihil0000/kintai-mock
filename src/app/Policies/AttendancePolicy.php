@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\Attendance;
 use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Auth\Access\Response;
 
 class AttendancePolicy
@@ -19,8 +20,12 @@ class AttendancePolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Attendance $attendance): bool
+    public function view($user, Attendance $attendance): bool
     {
+        if ($user instanceof Admin) {
+            return true;
+        }
+
         return $attendance->user_id === $user->id;
     }
 
