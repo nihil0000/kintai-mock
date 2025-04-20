@@ -4,11 +4,13 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthenticatedSessionController;
-use App\Http\Controllers\Admin\AuthenticatedSessionController as AdminAuthenticatedSessionController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\StampCorrectionRequestController;
+use App\Http\Controllers\Admin\AuthenticatedSessionController as AdminAuthenticatedSessionController;
+use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use App\Http\Controllers\Admin\StaffController as AdminStaffController;
+use App\Models\Attendance;
 
 /*
 |--------------------------------------------------------------------------
@@ -59,14 +61,32 @@ Route::middleware('auth')->controller(AttendanceController::class)->group(functi
     Route::post('/attendance/end-break', 'endBreak')->name('attendance.end_break'); // End break
     Route::post('/attendance/end', 'endWork')->name('attendance.end'); // End work
     Route::get('/attendance/list', 'index')->name('attendance.index'); // Display attendance list
-    Route::get('/attendance/{attendance}', 'show')->name('attendance.show'); // Show attendance
-    Route::post('/attendance/{attendance}/correction', 'store')->name('attendance_correction.store'); // Edit attendance
 });
 
 // Correction request
 Route::middleware('auth')->controller(StampCorrectionRequestController::class)->group(function () {
     Route::get('/stamp_correction_request/list', 'index')->name('stamp_correction_request.index'); // Display correction request list
 });
+
+/**
+ * Admin, general user
+ */
+
+// Show attendance detail
+Route::middleware('auth:admins,web')
+    ->get('attendance/{attendance}', function (Attendance $attendance) {
+
+        return app(\App\Http\Controllers\AttendanceController::class)->show($attendance);
+})->name('attendance.show');
+
+// Edit attendance
+Route::middleware(['auth:admins,web'])->controller(AttendanceController::class)->group(function () {
+    Route::post('attendance/{attendance}/correction', 'store')->name('attendance_correction.store');
+});
+
+/**
+ * Admin user
+ */
 
 // Admin authentication
 Route::controller(AdminAuthenticatedSessionController::class)
@@ -81,4 +101,12 @@ Route::middleware('auth.admins')
     ->controller(AdminAttendanceController::class)
     ->group(function () {
         Route::get('admin/attendance/list', 'index')->name('admin.attendance.index');
+        Route::get('admin/attendance/staff/{user}', 'show')->name('admin.attendance.show'); // Show the user attendance monthly
 });
+
+// Display staff list
+Route::middleware('auth.admins')
+    ->controller(AdminStaffController::class)
+    ->group(function () {
+        Route::get('admin/staff/list', 'index')->name('admin.staff.index');
+    });
