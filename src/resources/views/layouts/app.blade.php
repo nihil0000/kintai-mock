@@ -29,7 +29,7 @@
 
             <nav class="flex items-center space-x-5">
                 <!-- navigation for general users -->
-                @auth
+                @auth('web')
                     @unless (Request::routeIs('login.create') || Request::routeIs('register.create') || Request::routeIs('verification.notice'))
                         <a href="{{ route('attendance.create') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
                             勤怠
@@ -59,11 +59,11 @@
                 <!-- navigation for admin users -->
                 @auth('admins')
                     @unless (Request::routeIs('login.create') || Request::routeIs('register.create') || Request::routeIs('verification.notice'))
-                        <a href="{{ route('attendance.create') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
+                        <a href="{{ route('admin.attendance.index') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
                             勤怠一覧
                         </a>
 
-                        <a href="{{ route('attendance.index') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
+                        <a href="{{ route('admin.staff.index') }}" class="hover:underline text-sm md:text-base whitespace-nowrap">
                             スタッフ一覧
                         </a>
 
@@ -78,7 +78,7 @@
                             ログアウト
                         </a>
 
-                        <form action="{{ route('logout.destroy') }}" id="logout-form" method="post" class="hidden">
+                        <form action="{{ route('admin.logout.destroy') }}" id="logout-form" method="post" class="hidden">
                             @csrf
                         </form>
                     @endunless
