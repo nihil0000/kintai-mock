@@ -31,4 +31,14 @@ class AuthenticatedSessionController extends Controller
             'email' => 'ログイン情報が登録されていません。'
         ])->withInput();
     }
+
+    // Logout
+    public function destroy(Request $request)
+    {
+        auth()->logout(); // Logout the admin user
+        $request->session()->invalidate(); // Invalidate the session
+        $request->session()->regenerateToken(); // Regenerate CSRF token
+
+        return redirect()->route('admin.login.create');
+    }
 }
