@@ -36,25 +36,32 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($attendances as $attendance)
-                            <tr>
+                        @foreach ($period as $date)
+                            @php
+                                $attendance = $attendances->get($date->toDateString());
+                            @endphp
+                            <tr class="border-b-2">
                                 <td class="p-2">
-                                    {{ \Carbon\Carbon::parse($attendance->date)->isoFormat('MM/DD(dd)') }}
+                                    {{ $date->isoFormat('MM/DD(dd)') }}
                                 </td>
                                 <td class="p-2">
-                                    {{ $attendance->clock_in ? \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') : '-' }}
+                                    {{ $attendance?->clock_in ? \Carbon\Carbon::parse($attendance->clock_in)->format('H:i') : '-' }}
                                 </td>
                                 <td class="p-2">
-                                {{ $attendance->clock_out ? \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') : '-' }}
+                                {{ $attendance?->clock_out ? \Carbon\Carbon::parse($attendance->clock_out)->format('H:i') : '-' }}
                                 </td>
                                 <td class="p-2">
-                                    {{ $attendance->break_time ?? '-' }}
+                                    {{ $attendance?->break_time ?? '-' }}
                                 </td>
                                 <td class="p-2">
-                                    {{ $attendance->total_time ?? '-' }}
+                                    {{ $attendance?->total_time ?? '-' }}
                                 </td>
                                 <td class="p-2">
-                                    <a href="{{ route('attendance.show', $attendance->id) }}" class="text-blue-600 hover:underline">詳細</a>
+                                    @if ($attendance)
+                                        <a href="{{ route('attendance.show', $attendance->id) }}" class="text-blue-600 hover:underline">詳細</a>
+                                    @else
+                                        -
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

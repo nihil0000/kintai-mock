@@ -9,6 +9,7 @@ use App\Models\AttendanceCorrectionRequest;
 use App\Http\Requests\AttendanceCorrectionRequest as AttendanceCorrectionFormRequest;
 use App\Enums\AttendanceStatus;
 use App\Enums\AttendanceCorrectionRequestStatus;
+use Carbon\CarbonPeriod;
 
 class AttendanceController extends Controller
 {
@@ -43,7 +44,7 @@ class AttendanceController extends Controller
             ]
         );
 
-        return redirect()->route('attendance.index');
+        return redirect()->back();
     }
 
     /**
@@ -120,13 +121,33 @@ class AttendanceController extends Controller
             ? Carbon::parse($request->input('month') . '-01')
             : now();
 
+        // $attendances = Attendance::where('user_id', auth()->id())
+        //     ->whereBetween('date', [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()])
+        //     ->orderBy('date')
+        //     ->get();
+
+        // return view('attendance.index', [
+        //     'attendances' => $attendances,
+        //     'currentMonth' => $month,
+        //     'previousMonth' => $month->copy()->subMonth()->format('Y-m'),
+        //     'nextMonth' => $month->copy()->addMonth()->format('Y-m'),
+        // ]);
+
+        // 勤怠データ取得
         $attendances = Attendance::where('user_id', auth()->id())
-            ->whereBetween('date', [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()])
-            ->orderBy('date')
-            ->get();
+        ->whereBetween('date', [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()])
+        ->orderBy('date')
+        ->get()
+        ->keyBy(function ($attendance) {
+            return $attendance->date->toDateString(); // 'Y-m-d' の形式でキー化
+        });
+
+        // 月の全日付を取得
+        $period = CarbonPeriod::create($month->copy()->startOfMonth(), $month->copy()->endOfMonth());
 
         return view('attendance.index', [
-            'attendances' => $attendances,
+            'attendances' => $attendances, // Collection
+            'period' => $period,           // CarbonPeriod
             'currentMonth' => $month,
             'previousMonth' => $month->copy()->subMonth()->format('Y-m'),
             'nextMonth' => $month->copy()->addMonth()->format('Y-m'),
@@ -171,8 +192,10 @@ class AttendanceController extends Controller
             // Otherwise, use the original break times from the attendance record
             foreach ($attendance->breaks as $break) {
                 $breaks->push([
-                    'break_start' => optional($break->break_start)->format('H:i'),
-                    'break_end' => optional($break->break_end)->format('H:i'),
+                    'break_start' => $break->break_start ? \Carbon\Carbon::parse($break->break_start)->format('H:i') : '',
+                    // 'break_start' => optional($break->break_start)->format('H:i'),
+                    // 'break_end' => optional($break->break_end)->format('H:i'),
+                    'break_end'   => $break->break_end ? \Carbon\Carbon::parse($break->break_end)->format('H:i') : '',
                 ]);
             }
         }
@@ -205,7 +228,7 @@ class AttendanceController extends Controller
         // 勤怠修正申請の登録
         AttendanceCorrectionRequest::create([
             'attendance_id' => $attendance->id,
-            'user_id' => auth()->id(),
+            'user_id' => $attendance->user_id,
             'requested_clock_in' => $request->requested_clock_in
                 ? \Carbon\Carbon::parse($attendance->date)->setTimeFromTimeString($request->requested_clock_in)
                 : null,
