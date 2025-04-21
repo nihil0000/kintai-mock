@@ -8,16 +8,16 @@
 
             <div class="flex space-x-8">
                 <a href="{{ route('stamp_correction_request.index', ['status' => 'pending']) }}"
-                    class="font-semibold border-b-2 hover:text-black
-                        {{ request()->query('status') === 'pending'
-                            ? 'border-black'
+                    class="font-semibold hover:text-black
+                        {{ request()->query('status', 'pending') === 'pending'
+                            ? 'border-b-2 border-black'
                             : 'text-gray-500'}}">
                     承認待ち
                 </a>
                 <a href="{{ route('stamp_correction_request.index', ['status' => 'approved']) }}"
-                    class="font-semibold border-b-2 hover:text-black
+                    class="font-semibold hover:text-black
                         {{ request()->query('status') === 'approved'
-                            ? 'border-black'
+                            ? 'border-b-2 border-black'
                             : 'text-gray-500' }}">
                     承認済み
                 </a>
@@ -44,10 +44,19 @@
                                 <td class="p-2">{{ $correctionRequest->note }}</td>
                                 <td class="p-2">{{ $correctionRequest->created_at->format('Y/m/d') }}</td>
                                 <td class="p-2">
-                                    <a href="{{ route('attendance.show', optional($correctionRequest->attendance)->id) }}"
-                                        class="text-blue-600 hover:underline">
-                                        詳細
-                                    </a>
+                                    @auth('web')
+                                        <a href="{{ route('attendance.show', optional($correctionRequest->attendance)->id) }}"
+                                            class="text-blue-600 hover:underline">
+                                            詳細
+                                        </a>
+                                    @endauth
+
+                                    @auth('admins')
+                                        <a href="{{ route('admin.request.show', $correctionRequest->id) }}"
+                                            class="text-blue-600 hover:underline">
+                                            詳細
+                                        </a>
+                                    @endauth
                                 </td>
                             </tr>
                         @endforeach
