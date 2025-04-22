@@ -9,10 +9,6 @@
             <form action="{{ route('attendance_correction.store', $attendance->id) }}" method="post">
                 @csrf
 
-                @php
-                    $isPending = optional($attendance->attendance_correction_request)->status === \App\Enums\AttendanceCorrectionRequestStatus::Pending;
-                @endphp
-
                 <div class="bg-white rounded p-2">
                     <table class="w-full table-auto border-collapse">
                         <!-- user name -->
@@ -35,12 +31,12 @@
                             <th class="py-4 w-1/3 pl-16 text-left">出勤・退勤</th>
                             <td class="py-4 pl-24">
                                 <input type="time" name="requested_clock_in"
-                                    {{ $isPending ? 'readonly' : '' }}
+                                    {{ in_array(optional($attendance->attendance_correction_request)->status?->value, ['pending', 'approved']) ? 'readonly' : '' }}
                                     value="{{ old('requested_clock_in', $clockIn) }}"
                                     class="w-28 text-center border rounded py-1 px-2 mr-8" />
                                 〜
                                 <input type="time" name="requested_clock_out"
-                                    {{ $isPending ? 'readonly' : '' }}
+                                    {{ in_array(optional($attendance->attendance_correction_request)->status?->value, ['pending', 'approved']) ? 'readonly' : '' }}
                                     value="{{ old('requested_clock_out', $clockOut) }}"
                                     class="w-28 text-center border rounded py-1 px-2 ml-8" />
 
@@ -57,12 +53,12 @@
                                 <th class="py-4 w-1/3 pl-16 text-left">休憩{{ $i + 1 }}</th>
                                 <td class="py-4 pl-24">
                                     <input type="time" name="requested_breaks[start][]"
-                                        {{ $isPending ? 'readonly' : '' }}
+                                        {{ in_array(optional($attendance->attendance_correction_request)->status?->value, ['pending', 'approved']) ? 'readonly' : '' }}
                                         value="{{ old("requested_breaks.start.$i", $break['break_start']) }}"
                                         class="w-28 text-center border rounded py-1 px-2 mr-8" />
                                     〜
                                     <input type="time" name="requested_breaks[end][]"
-                                        {{ $isPending ? 'readonly' : '' }}
+                                        {{ in_array(optional($attendance->attendance_correction_request)->status?->value, ['pending', 'approved']) ? 'readonly' : '' }}
                                         value="{{ old("requested_breaks.end.$i", $break['break_end']) }}"
                                         class="w-28 text-center border rounded py-1 px-2 ml-8" />
 
@@ -80,7 +76,7 @@
                             <td class="py-4 pl-24">
                                 <textarea name="note"
                                     class="w-full text-sm max-w-md border rounded py-2 px-3 resize-none"
-                                    {{ $isPending ? 'readonly' : '' }}>{{ old('note', optional($attendance->attendance_correction_request)->note ?? $attendance->note) }}</textarea>
+                                    {{ in_array(optional($attendance->attendance_correction_request)->status?->value, ['pending', 'approved']) ? 'readonly' : '' }}>{{ old('note', optional($attendance->attendance_correction_request)->note ?? $attendance->note) }}</textarea>
 
                                 <!-- validation message -->
                                 @error('note')
@@ -91,8 +87,16 @@
                     </table>
                 </div>
 
-                @if ($isPending)
+                @if (optional($attendance->attendance_correction_request)->status?->value === 'pending')
                     <p class="text-center text-red-500 mt-8">*承認待ちのため修正はできません。</p>
+                @elseif (optional($attendance->attendance_correction_request)->status?->value === 'approved')
+                    <div class="text-center">
+                        <button type="submit"
+                            class="bg-gray-600 text-white text-lg font-bold w-28 py-2 mt-20 mb-4 rounded hover:bg-gray-700"
+                            disabled>
+                            承認済み
+                        </button>
+                    </div>
                 @else
                     <div class="text-center">
                         <button type="submit"
