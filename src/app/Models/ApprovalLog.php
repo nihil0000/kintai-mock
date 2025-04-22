@@ -9,7 +9,13 @@ class ApprovalLog extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['comment'];
+    protected $fillable = [
+        'attendance_correction_request_id',
+        'admin_id',
+        'approved_at',
+        'action',
+        'comment',
+    ];
 
     public function attendance_correction_request()
     {

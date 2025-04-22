@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\AttendanceCorrectionRequest;
+use App\Models\ApprovalLog;
+use App\Enums\AttendanceCorrectionRequestStatus;
 
 class StampCorrectionRequestController extends Controller
 {
@@ -57,6 +59,24 @@ class StampCorrectionRequestController extends Controller
             }
         }
 
-    return view('admin.stamp_correction_request.show', compact('attendance', 'breaks', 'clockIn', 'clockOut'));
-}
+        return view('admin.stamp_correction_request.show', compact('attendance', 'breaks', 'clockIn', 'clockOut'));
+    }
+
+    // Update correction request
+    public function update(AttendanceCorrectionRequest $attendance_correction_request)
+    {
+        $attendance_correction_request->update([
+            'status' => AttendanceCorrectionRequestStatus::Approved->value,
+        ]);
+
+        // 承認ログの作成
+        ApprovalLog::create([
+            'attendance_correction_request_id' => $attendance_correction_request->id,
+            'admin_id' => auth('admins')->id(), // 管理者ログイン中が前提
+            'approved_at' => \Carbon\Carbon::now(),
+            'action' => 'approved',
+            'comment' => null, // 管理者コメントを入力させたいならフォームで追加
+        ]);
+        return redirect()->back();
+    }
 }
