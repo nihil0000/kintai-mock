@@ -17,14 +17,12 @@ class AttendanceFactory extends Factory
      */
     public function definition(): array
     {
-        $date = $this->faker->dateTimeBetween('-1 month', 'now')->format('Y-m-d');
-
-        $clockIn = $this->faker->dateTimeBetween("{$date} 08:30:00", "{$date} 09:30:00");
-        $clockOut = (clone $clockIn)->modify('+8 hours');
+        $clockIn = $this->faker->dateTimeBetween('08:30:00', '09:30:00');
+        $clockOut = (clone $clockIn)->modify('+9 hours');
 
         return [
             'user_id'   => null,
-            'date'      => $date,
+            'date'      => null,
             'clock_in'  => $clockIn,
             'clock_out' => $clockOut,
             'status'    => AttendanceStatus::AfterWork,
