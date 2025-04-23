@@ -10,6 +10,7 @@ use App\Http\Controllers\StampCorrectionRequestController;
 use App\Http\Controllers\Admin\AuthenticatedSessionController as AdminAuthenticatedSessionController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 use App\Http\Controllers\Admin\StaffController as AdminStaffController;
+use App\Http\Controllers\Admin\StampCorrectionRequestController as AdminStampCorrectionRequestController;
 use App\Models\Attendance;
 
 /*
@@ -63,10 +64,6 @@ Route::middleware('auth')->controller(AttendanceController::class)->group(functi
     Route::get('/attendance/list', 'index')->name('attendance.index'); // Display attendance list
 });
 
-// Correction request
-Route::middleware('auth')->controller(StampCorrectionRequestController::class)->group(function () {
-    Route::get('/stamp_correction_request/list', 'index')->name('stamp_correction_request.index'); // Display correction request list
-});
 
 /**
  * Admin, general user
@@ -83,6 +80,16 @@ Route::middleware('auth:admins,web')
 Route::middleware(['auth:admins,web'])->controller(AttendanceController::class)->group(function () {
     Route::post('attendance/{attendance}/correction', 'store')->name('attendance_correction.store');
 });
+
+// Display correction request
+Route::middleware(['auth:admins,web'])->get('/stamp_correction_request/list', function (Request $request) {
+    if (auth()->guard('admins')->check()) {
+        return app(AdminStampCorrectionRequestController::class)->index($request);
+    }
+
+    return app(StampCorrectionRequestController::class)->index($request);
+})->name('stamp_correction_request.index');
+
 
 /**
  * Admin user
@@ -110,4 +117,12 @@ Route::middleware('auth.admins')
     ->controller(AdminStaffController::class)
     ->group(function () {
         Route::get('admin/staff/list', 'index')->name('admin.staff.index');
+    });
+
+// Show correction request detail
+Route::middleware('auth.admins')
+    ->controller(AdminStampCorrectionRequestController::class)
+    ->group(function () {
+        Route::get('stamp_correction_request/approve/{attendance_correction_request}', 'show')->name('admin.request.show');
+        Route::post('stamp_correction_request/approve/{attendance_correction_request}/update', 'update')->name('admin.request.update');
     });
