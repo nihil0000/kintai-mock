@@ -121,18 +121,6 @@ class AttendanceController extends Controller
             ? Carbon::parse($request->input('month') . '-01')
             : now();
 
-        // $attendances = Attendance::where('user_id', auth()->id())
-        //     ->whereBetween('date', [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()])
-        //     ->orderBy('date')
-        //     ->get();
-
-        // return view('attendance.index', [
-        //     'attendances' => $attendances,
-        //     'currentMonth' => $month,
-        //     'previousMonth' => $month->copy()->subMonth()->format('Y-m'),
-        //     'nextMonth' => $month->copy()->addMonth()->format('Y-m'),
-        // ]);
-
         // 勤怠データ取得
         $attendances = Attendance::where('user_id', auth()->id())
         ->whereBetween('date', [$month->copy()->startOfMonth(), $month->copy()->endOfMonth()])
