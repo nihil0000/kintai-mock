@@ -1,0 +1,1 @@
+document.addEventListener("DOMContentLoaded",()=>{const t=document.getElementById("image"),e=document.getElementById("file-name");t&&e&&t.addEventListener("change",function(){this.files&&this.files[0]?e.textContent=this.files[0].name:e.textContent=""})});
