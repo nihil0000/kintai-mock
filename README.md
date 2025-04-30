@@ -34,7 +34,7 @@ MAIL_FROM_ADDRESS=test@example.com
 
 ### Migrate, Seed
 ```bash
-docker exec -it php bash
+docker exec -it [PHP CONTAINER ID] bash
 php artisan migrate --seed
 ```
 
@@ -48,7 +48,7 @@ php artisan migrate --seed
 
 ## アクセスURL
 - 開発環境
-    - http://localhost
+    - http://localhost/login
 - phpMyAdmin
     - http://localhost:8080
 
@@ -65,12 +65,12 @@ php artisan migrate --seed
 ## PHPUnitを利用したテスト
 ```bash
 # Create database
-docker compose exec mysql bash
+docker compose exec [MYSQL CONTAINER ID] bash
 mysql -u root -p # password: root
 create database test_database;
 
 # Migrate
-docker compose exec php bash
+docker compose exec [PHP CONTAINER ID] bash
 php artisan migrate:fresh --env=testing
 
 # Testing
