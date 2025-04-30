@@ -8,7 +8,7 @@ use App\Models\Admin;
 use Database\Seeders\DatabaseSeeder;
 
 
-class LoginAdminTest extends TestCase
+class AdminLoginTest extends TestCase
 {
     use RefreshDatabase;
 

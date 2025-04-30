@@ -16,6 +16,7 @@ RUN curl -fsSL https://getcomposer.org/installer | php \
   && mv composer.phar /usr/local/bin/composer \
   && composer self-update \
   && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-  && apt-get install -y nodejs
+  && apt-get install -y nodejs \
+  && apt-get install -y make build-essential
 
 WORKDIR /var/www
