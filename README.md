@@ -8,7 +8,7 @@
 
 ### Clone
 ```bash
-git clone git@github.com:nihil0000/furima-mock.git .
+git clone git@github.com:nihil0000/kintai-mock.git .
 ```
 
 ＊ MySQLはOSによって起動しない場合があるため、それぞれのOSに合わせてdocker-compose.ymlファイルを編集してください \
