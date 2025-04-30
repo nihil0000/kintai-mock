@@ -21,6 +21,22 @@ git clone git@github.com:nihil0000/kintai-mock.git .
 make init
 ```
 
+### Settings
+#### .env ファイルを以下のように編集してください。
+```bash
+DB_HOST=mysql
+DB_DATABASE=laravel_db
+DB_USERNAME=laravel_user
+DB_PASSWORD=laravel_pass
+
+MAIL_FROM_ADDRESS=test@example.com
+```
+
+### Migrate, Seed
+```bash
+php artisan migrate:fresh --seed
+```
+
 ## 使用技術
 - PHP 8.3.19
 - Larabel 10.48.29
