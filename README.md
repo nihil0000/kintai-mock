@@ -34,7 +34,8 @@ MAIL_FROM_ADDRESS=test@example.com
 
 ### Migrate, Seed
 ```bash
-php artisan migrate:fresh --seed
+docker exec -it php bash
+php artisan migrate --seed
 ```
 
 ## 使用技術
@@ -64,9 +65,9 @@ php artisan migrate:fresh --seed
 ## PHPUnitを利用したテスト
 ```bash
 # Create database
-docker-compose exec mysql bash
-mysql -u root -p
-create database test_database; # password: root
+docker compose exec mysql bash
+mysql -u root -p # password: root
+create database test_database;
 
 # Migrate
 docker compose exec php bash
