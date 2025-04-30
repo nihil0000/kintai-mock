@@ -22,9 +22,17 @@
                     <img src="{{ asset('images/logo.svg') }}" alt="ロゴ" class="h-8">
                 </a>
             @else
-                <a href="{{ route('attendance.create') }}" class="self-center xl:self-auto cursor-pointer">
-                    <img src="{{ asset('images/logo.svg') }}" alt="ロゴ" class="h-8">
-                </a>
+                @auth('web')
+                    <a href="{{ route('attendance.create') }}" class="self-center xl:self-auto cursor-pointer">
+                        <img src="{{ asset('images/logo.svg') }}" alt="ロゴ" class="h-8">
+                    </a>
+                @endauth
+
+                @auth('admins')
+                    <a href="{{ route('admin.attendance.index') }}" class="self-center xl:self-auto cursor-pointer">
+                        <img src="{{ asset('images/logo.svg') }}" alt="ロゴ" class="h-8">
+                    </a>
+                @endauth
             @endif
 
             <nav class="flex items-center space-x-5">
