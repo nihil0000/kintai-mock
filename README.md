@@ -1,5 +1,8 @@
 # kintai
 
+## 概要
+coachtech勤怠管理アプリ
+
 ## 前提条件
 - Gitがインストール済みであること
 - DockerおよびDocker Composeがインストール済みであること
